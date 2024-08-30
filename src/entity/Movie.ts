@@ -9,32 +9,32 @@ import {
 @Entity({ name: "movies" })
 export class Movie {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string;
 
-  @Column({ nullable: false })
-  title: string;
+  @Column({ type: "varchar", length: 255, nullable: false })
+  title!: string;
 
-  @Column({ nullable: false })
-  description: string;
+  @Column({ type: "text", nullable: false })
+  description!: string;
 
-  @Column({ nullable: false })
-  director: string;
+  @Column({ type: "varchar", length: 255, nullable: false })
+  director!: string;
 
-  @Column({ nullable: false })
-  year: number;
+  @Column({ type: "int", nullable: false })
+  year!: number;
 
-  @Column({ nullable: false })
-  rating: string;
+  @Column({ type: "float", nullable: false }) // Assuming rating is a number (e.g., 8.5)
+  rating!: number;
 
-  @Column({ nullable: false })
-  image: string;
+  @Column({ type: "varchar", length: 255, nullable: false })
+  image!: string;
 
-  @Column({ nullable: false })
-  cast: string;
+  @Column("simple-array", { nullable: false }) // Assuming cast is an array of strings
+  cast!: string[];
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }

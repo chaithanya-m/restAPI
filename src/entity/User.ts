@@ -1,31 +1,31 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
-    Column,
-    CreateDateColumn,
-    UpdateDateColumn,
-  } from "typeorm";
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
-  @Entity({ name: "users" })
-  export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
+@Entity({ name: "users" })
+export class User {
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-    @Column({ nullable: false })
-    name: string;
+  @Column({ type: "varchar", length: 255, nullable: false })
+  name!: string;
 
-    @Column({ nullable: false })
-    email: string;
+  @Column({ type: "varchar", length: 255, unique: true, nullable: false })
+  email!: string;
 
-    @Column({ nullable: false })
-    password: string;
+  @Column({ type: "varchar", length: 255, nullable: false })
+  password!: string;
 
-    @Column({ default: "user" })
-    role: string;
+  @Column({ type: "varchar", length: 50, default: "user" })
+  role!: string;
 
-    @CreateDateColumn()
-    createdAt: Date;
+  @CreateDateColumn()
+  createdAt!: Date;
 
-    @UpdateDateColumn()
-    updatedAt: Date;
-  }
+  @UpdateDateColumn()
+  updatedAt!: Date;
+}

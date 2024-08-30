@@ -1,6 +1,6 @@
-export class UserResponce {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
+export class UserResponse {
+  readonly id!: number;
+  readonly name!: string;
+  readonly email!: string;
+  readonly role!: string;
 }

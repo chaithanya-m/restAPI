@@ -1,42 +1,22 @@
-// import "reflect-metadata"
-// import { DataSource } from "typeorm"
-// import { User } from "./entity/User"
-
-// export const AppDataSource = new DataSource({
-//     type: "sqlite",
-//     database: "database.sqlite",
-//     synchronize: true,
-//     logging: false,
-//     entities: [User],
-//     migrations: [],
-//     subscribers: [],
-// })
-
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-
 import * as dotenv from "dotenv";
 import { User } from "./entity/User";
 import { Movie } from "./entity/Movie";
 
 dotenv.config();
 
-const { DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE, NODE_ENV } =
-  process.env;
+const {
+  NODE_ENV = "development"
+} = process.env;
 
+// SQLite configuration doesn't need DB_HOST, DB_PORT, DB_USERNAME, or DB_PASSWORD
 export const AppDataSource = new DataSource({
-//   type: "postgres",
-//   host: DB_HOST,
-//   port: parseInt(DB_PORT || "5432"),
-//   username: DB_USERNAME,
-//   password: DB_PASSWORD,
-//   database: DB_DATABASE,
-    type: "sqlite",
-    database: "database.sqlite",
-  synchronize: NODE_ENV === "dev" ? false : false,
-//logging logs sql command on the treminal
-  logging: NODE_ENV === "dev" ? false : false,
+  type: "sqlite",
+  database: "restapis_db.sqlite", // SQLite database file path
+  synchronize: NODE_ENV === "development", // Auto-sync schema changes in development
+  logging: NODE_ENV === "development", // Log SQL queries in development
   entities: [User, Movie],
-  migrations: [__dirname + "/migration/*.ts"],
+  migrations: [__dirname + "/migration/*.ts"], // Adjust path if using JavaScript files
   subscribers: [],
 });
