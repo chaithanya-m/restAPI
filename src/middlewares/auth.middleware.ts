@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
+import { AppDataSource } from "../data-source";
+import { User } from "../entity/User";
 
 dotenv.config();
 
@@ -14,28 +16,45 @@ interface DecodedToken {
 declare global {
   namespace Express {
     interface Request {
-      currentUser?: DecodedToken; // Adjust the type to match your use case
+      currentUser?: User; // Update type to User
     }
   }
 }
 
-export const authentication = (req: Request, res: Response, next: NextFunction) => {
+
+const secret = process.env.JWT_SECRET as string;
+
+export const authentication = async (req: Request, res: Response, next: NextFunction) => {
   const header = req.headers.authorization;
+
+
   if (!header) {
+    // console.log('Token:', token);
     return res.status(401).json({ message: "Unauthorized" });
   }
 
   const token = header.split(" ")[1];
+
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
   try {
     // Verify the token and decode it
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as DecodedToken;
 
-    // Assign the decoded payload to req.currentUser
-    // req.currentUser = decoded;
+    const decoded = jwt.verify(token, secret, { algorithms: ['HS256'] }) as DecodedToken;
+
+    // Fetch the user from the database
+    const userRepository = AppDataSource.getRepository(User);
+    const user = await userRepository.findOne({ where: { id: Number(decoded.id) } });
+
+    // If user is not found
+    if (!user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    // Assign the full user object to req.currentUser
+    req.currentUser = user;
 
     // Proceed to the next middleware or route handler
     next();

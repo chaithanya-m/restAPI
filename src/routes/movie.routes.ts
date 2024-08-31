@@ -6,7 +6,7 @@ import { authorization } from "../middlewares/authorization";
 const Router = express.Router();
 
 Router.get("/movies", authentication, MovieController.getAllMovies);
-Router.post("/movies", authentication, MovieController.createMovie);
+Router.post("/movies", authentication, MovieController.createMovies   );
 
 Router.put(
   "/movies/:id",

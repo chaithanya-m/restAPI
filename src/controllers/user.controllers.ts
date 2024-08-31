@@ -5,38 +5,6 @@ import { encrypt } from "../helpers/helpers";
 import * as cache from "memory-cache";
 
 export class UserController {
-  // User signup
-  static async signup(req: Request, res: Response) {
-    try {
-      const { name, email, password, role } = req.body;
-
-      // Validate request data
-      if (!name || !email || !password || !role) {
-        return res.status(400).json({ message: "All fields are required" });
-      }
-
-      const encryptedPassword = await encrypt.encryptpass(password);
-
-      const user = new User();
-      user.name = name;
-      user.email = email;
-      user.password = encryptedPassword;
-      user.role = role;
-
-      const userRepository = AppDataSource.getRepository(User);
-      await userRepository.save(user);
-
-      const token = encrypt.generateToken({ id: user.id });
-
-      return res
-        .status(201)
-        .json({ message: "User created successfully", token, user });
-    } catch (error) {
-      console.error("Signup error:", error);
-      return res.status(500).json({ message: "Internal server error" });
-    }
-  }
-
   // Get all users with caching
   static async getUsers(req: Request, res: Response) {
     try {

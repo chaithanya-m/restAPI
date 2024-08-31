@@ -25,30 +25,30 @@ export class MovieController {
   }
 
   // Create a new movie
-  static async createMovie(req: Request, res: Response) {
+  static async createMovies(req: Request, res: Response) {
     try {
-      const { title, description, director, year, rating, image, cast } = req.body;
-
+      const movies = req.body; // Assuming the request body is an array of movie objects
+  
       // Validate request data
-      if (!title || !description || !director || !year || !rating || !image || !cast) {
-        return res.status(400).json({ message: "All fields are required" });
+      if (!Array.isArray(movies) || movies.length === 0) {
+        return res.status(400).json({ message: "No movies provided" });
       }
-
-      const movie = new Movie();
-      movie.title = title;
-      movie.description = description;
-      movie.director = director;
-      movie.year = year;
-      movie.rating = rating;
-      movie.image = image;
-      movie.cast = cast;
-
+  
+      // Validate each movie object
+      for (const movie of movies) {
+        const { title, description, director, year, rating, image, cast } = movie;
+        if (!title || !description || !director || !year || !rating || !image || !cast) {
+          return res.status(400).json({ message: "All fields are required for every movie" });
+        }
+      }
+  
+      // Save all movies to the database
       const movieRepository = AppDataSource.getRepository(Movie);
-      await movieRepository.save(movie);
-
-      return res.status(201).json({ message: "Movie created successfully", movie });
+      const savedMovies = await movieRepository.save(movies);
+  
+      return res.status(201).json({ message: "Movies created successfully", movies: savedMovies });
     } catch (error) {
-      console.error("Error creating movie:", error);
+      console.error("Error creating movies:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   }
